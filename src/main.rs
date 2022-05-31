@@ -96,7 +96,7 @@ use toml;
 type TLSStream = native_tls::TlsStream<std::net::TcpStream>;
 type Rfc822Data = Vec<u8>;
 
-const ALL_MAIL_INBOX: &str = "[Gmail]/All Mail";
+const ALL_MAIL_INBOX: &str = "[Google Mail]/Alle Nachrichten";
 
 #[derive(Debug, Deserialize)]
 #[serde(tag = "type")]
@@ -393,6 +393,7 @@ impl BackupRunner {
         chunk: &[Uid],
     ) -> Result<ZeroCopy<Vec<Fetch>>, GBackupError> {
         let mut session = BackupRunner::new_imap_session(&account)?;
+        
         session.select(ALL_MAIL_INBOX)?;
         let fetched = session.uid_fetch(
             Vec::from_iter(chunk.iter().map(|uid| uid.to_string())).join(","),
@@ -405,6 +406,11 @@ impl BackupRunner {
         let ro_acct = self.account.read().unwrap();
         let mut engine = get_backup_engine(&ro_acct)?;
         let mut session = BackupRunner::new_imap_session(&self.account)?;
+        // let folder_list = session.list(None, Some("*"));
+        // match folder_list {
+        //     Ok(ref name) => println!("hä{:?}", name),
+        //     _ => println!("No name"),
+        // }
         // TODO: This should also be configurable, we may want to backup all mail,
         // specific labes, etc... note also that the mailbox names may not be the same
         // depending on the language
