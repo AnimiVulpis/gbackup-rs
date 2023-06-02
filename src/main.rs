@@ -96,7 +96,7 @@ use toml;
 type TLSStream = native_tls::TlsStream<std::net::TcpStream>;
 type Rfc822Data = Vec<u8>;
 
-const ALL_MAIL_INBOX: &str = "[Google Mail]/Alle Nachrichten";
+const ALL_MAIL_INBOX: &str = "INBOX";
 
 #[derive(Debug, Deserialize)]
 #[serde(tag = "type")]
